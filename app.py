@@ -2,6 +2,7 @@ import os
 import json
 from pathlib import Path
 import streamlit as st
+from openai import OpenAI
 from dotenv import dotenv_values, load_dotenv
 
 from langfuse.decorators import observe
@@ -38,10 +39,22 @@ USD_TO_PLN = 3.62
 PRICING = model_pricings[st.session_state["model"]]
 
 env = dotenv_values(".env")
+
+
+# openai_client = OpenAI(api_key=env["OPENAI_API_KEY"])
+# Ta linia załaduje zmienne z pliku .env, jeśli istnieje (przydatne lokalnie)
 load_dotenv()
 
-openai_client = OpenAI(api_key=env["OPENAI_API_KEY"])
+# Użyj os.getenv() do bezpiecznego pobrania klucza API
+# Ta funkcja zadziała zarówno lokalnie (z .env), jak i na DigitalOcean
+api_key = os.getenv("OPENAI_API_KEY")
 
+# Dobrze jest dodać sprawdzenie, czy klucz faktycznie został znaleziony
+if not api_key:
+    raise ValueError("Błąd: Zmienna środowiskowa OPENAI_API_KEY nie została ustawiona.")
+
+# Teraz zainicjuj klienta
+openai_client = OpenAI(api_key=api_key)
 #
 # CHATBOT
 #
