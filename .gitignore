@@ -1,2 +1,6 @@
 .env
 db
+Naszgpt_langfuse/
+__pycache__/
+*.log
+ipynb_checkpoints/
